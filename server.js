@@ -377,13 +377,49 @@ app.get("/api/events", async (req, res) => {
   }
 });
 
+// // Update event (pending)
+// app.put("/api/events/:id", async (req, res) => {
+//   try {
+//     const { id } = req.params;
+//     await eventsCollection.updateOne(
+//       { _id: new ObjectId(id) },
+//       { $set: { pendingAction: "update", pendingData: req.body, updatedAt: new Date() } }
+//     );
+//     res.json({ message: "⚡ Update submitted — pending approval" });
+//   } catch (err) {
+//     console.error("❌ Error submitting update:", err);
+//     res.status(500).json({ error: "Failed to submit update" });
+//   }
+// });
+
+// // Request delete
+// app.delete("/api/events/:id/request", async (req, res) => {
+//   try {
+//     const { id } = req.params;
+//     await eventsCollection.updateOne(
+//       { _id: new ObjectId(id) },
+//       { $set: { pendingAction: "delete", updatedAt: new Date() } }
+//     );
+//     res.json({ message: "⚡ Deletion requested — pending approval" });
+//   } catch (err) {
+//     console.error("❌ Error requesting delete:", err);
+//     res.status(500).json({ error: "Failed to request delete" });
+//   }
+// });
+
 // Update event (pending)
-app.put("/api/events/:id", async (req, res) => {
+app.put("/api/events/:id", adminAuth, async (req, res) => {
   try {
     const { id } = req.params;
     await eventsCollection.updateOne(
       { _id: new ObjectId(id) },
-      { $set: { pendingAction: "update", pendingData: req.body, updatedAt: new Date() } }
+      {
+        $set: {
+          pendingAction: "update",
+          pendingData: req.body,
+          updatedAt: new Date(),
+        },
+      }
     );
     res.json({ message: "⚡ Update submitted — pending approval" });
   } catch (err) {
@@ -392,8 +428,8 @@ app.put("/api/events/:id", async (req, res) => {
   }
 });
 
-// Request delete
-app.delete("/api/events/:id/request", async (req, res) => {
+// Request delete (pending)
+app.delete("/api/events/:id/request", adminAuth, async (req, res) => {
   try {
     const { id } = req.params;
     await eventsCollection.updateOne(
@@ -406,6 +442,7 @@ app.delete("/api/events/:id/request", async (req, res) => {
     res.status(500).json({ error: "Failed to request delete" });
   }
 });
+
 
 // ----------------- ADMIN ROUTES -----------------
 
