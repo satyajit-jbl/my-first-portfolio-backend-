@@ -16,11 +16,23 @@ const PROD_ORIGINS = process.env.PROD_FRONTEND_ORIGINS // optional comma separat
 
 const allowedOrigins = process.env.NODE_ENV === "production" ? PROD_ORIGINS : DEV_ORIGINS;
 
+// app.use(cors({
+//   origin: allowedOrigins,
+//   methods: ["GET", "POST", "PUT", "DELETE"],
+//   credentials: true,
+// }));
+
+// ---- CORS config ----
 app.use(cors({
-  origin: allowedOrigins,
+  origin: [
+    "http://localhost:5173",
+    "http://localhost:5174",
+    "https://satyajit-ghosh.netlify.app"
+  ],
   methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true,
 }));
+
 
 // ---- MongoDB setup ----
 const MONGODB_URI = process.env.MONGODB_URI;
