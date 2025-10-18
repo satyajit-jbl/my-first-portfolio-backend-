@@ -162,17 +162,30 @@ app.delete("/api/events/:id/request", async (req, res) => {
 });
 
 // Fetch only approved events (public listing) — returns merged document for items which were created and approved or updated & approved
+// app.get("/api/events", async (req, res) => {
+//   try {
+//     // approved events (isApproved true)
+//     const events = await eventsCollection.find({ isApproved: true }).toArray();
+//     const sorted = sortByDateAscending(events);
+//     res.json(sorted);
+//   } catch (err) {
+//     console.error("❌ Error fetching approved events:", err);
+//     res.status(500).json({ error: "Failed to fetch events" });
+//   }
+// });
+
 app.get("/api/events", async (req, res) => {
   try {
-    // approved events (isApproved true)
     const events = await eventsCollection.find({ isApproved: true }).toArray();
+    console.log("✅ Events fetched count:", events.length);
     const sorted = sortByDateAscending(events);
     res.json(sorted);
   } catch (err) {
     console.error("❌ Error fetching approved events:", err);
-    res.status(500).json({ error: "Failed to fetch events" });
+    res.status(500).json({ error: err.message });
   }
 });
+
 
 // ----------------- ADMIN ROUTES -----------------
 
