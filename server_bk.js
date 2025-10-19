@@ -56,6 +56,8 @@ function sortByDateAscending(arr) {
 }
 
 // ----------------- PUBLIC ROUTES -----------------
+
+// Add new event
 app.post("/api/events", async (req, res) => {
   try {
     const payload = req.body;
@@ -75,6 +77,7 @@ app.post("/api/events", async (req, res) => {
   }
 });
 
+// Fetch approved events
 app.get("/api/events", async (req, res) => {
   try {
     const events = await eventsCollection.find({ isApproved: true }).toArray();
@@ -85,6 +88,7 @@ app.get("/api/events", async (req, res) => {
   }
 });
 
+// Update event (pending)
 app.put("/api/events/:id", async (req, res) => {
   try {
     const { id } = req.params;
@@ -99,6 +103,7 @@ app.put("/api/events/:id", async (req, res) => {
   }
 });
 
+// Request delete
 app.delete("/api/events/:id/request", async (req, res) => {
   try {
     const { id } = req.params;
@@ -113,7 +118,11 @@ app.delete("/api/events/:id/request", async (req, res) => {
   }
 });
 
+
+
+
 // ----------------- ADMIN ROUTES -----------------
+
 app.get("/api/events/pending", adminAuth, async (req, res) => {
   try {
     const pendings = await eventsCollection
@@ -181,14 +190,8 @@ app.delete("/api/events/:id/reject", adminAuth, async (req, res) => {
   }
 });
 
-// Health check
+// Health check route
 app.get("/", (req, res) => res.send("🎯 Marathon API is running..."));
 
-// Export for Vercel
+// ✅ Important for Vercel: export app (no app.listen)
 export default app;
-
-// Local dev
-if (process.env.NODE_ENV !== "production") {
-  const PORT = process.env.PORT || 5000;
-  app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
-}
